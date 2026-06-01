@@ -1,0 +1,30 @@
+{
+  "name": "product-design-agents",
+  "owner": { "name": "Jovy Liu" },
+  "metadata": {
+    "description": "Four standalone product-design agents — install only the ones you need.",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "product-manager",
+      "source": "./product-manager",
+      "description": "Turns a raw idea into a validated PRD — discovery, direction validation, user stories, and spec in one pass"
+    },
+    {
+      "name": "ux-designer",
+      "source": "./ux-designer",
+      "description": "Reviews a design's usability, accessibility, copy, consistency, and resilience against the PRD"
+    },
+    {
+      "name": "ui-designer",
+      "source": "./ui-designer",
+      "description": "Generates designs, binds them to a design system, polishes the visuals, and audits for drift"
+    },
+    {
+      "name": "qa-engineer",
+      "source": "./qa-engineer",
+      "description": "Produces a test plan with manual cases, regression scope, and a bug-report template from a PRD"
+    }
+  ]
+}

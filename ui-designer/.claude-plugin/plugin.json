@@ -1,0 +1,7 @@
+{
+  "name": "ui-designer",
+  "description": "Generates designs, binds them to a design system, polishes the visuals, and audits for drift",
+  "version": "1.0.0",
+  "author": { "name": "Jovy Liu" },
+  "keywords": ["ui", "design-system", "tokens", "visual-design", "figma"]
+}

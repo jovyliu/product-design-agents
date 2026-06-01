@@ -1,0 +1,7 @@
+{
+  "name": "qa-engineer",
+  "description": "Produces a test plan with manual cases, regression scope, and a bug-report template from a PRD",
+  "version": "1.0.0",
+  "author": { "name": "Jovy Liu" },
+  "keywords": ["qa", "test-plan", "test-cases", "regression", "quality"]
+}

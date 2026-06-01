@@ -1,0 +1,7 @@
+{
+  "name": "ux-designer",
+  "description": "Reviews a design's usability, accessibility, copy, consistency, and resilience against the PRD",
+  "version": "1.0.0",
+  "author": { "name": "Jovy Liu" },
+  "keywords": ["ux", "usability", "accessibility", "design-review", "heuristics"]
+}

@@ -1,0 +1,7 @@
+{
+  "name": "product-manager",
+  "description": "Turns a raw idea into a validated PRD — discovery, direction validation, user stories, and spec in one pass",
+  "version": "1.0.0",
+  "author": { "name": "Jovy Liu" },
+  "keywords": ["product", "pm", "discovery", "prd", "user-stories", "validation"]
+}
