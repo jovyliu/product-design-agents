@@ -127,26 +127,17 @@ When the user asks for one move at a time, create the HTML on the first move and
 
 ### Template
 
-Use the structure below verbatim as the skeleton; fill the panels with move content. The reference implementation lives at the GO-study-abroad output — match its look and the tab JS.
+The canonical shell lives in this agent's package at `templates/prd-shell.html`. Copy it **verbatim** — do not regenerate the `<style>` or `<script>` from memory, and do not redesign the CSS. The shell already encodes the typographic hierarchy, badges, and tab JS above; rewriting it causes drift and wastes output tokens.
 
-```
-<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{task} — PRD</title>
-<!-- meta: task / producer / date / status / deliverables -->
-<style> /* system-font stack, max-width ~880px centered, .seg sticky pill tabs,
-  .card, table, .badge(.go/.warn/.block/.soft), .panel{display:none}.panel.active{display:block} */ </style>
-</head><body><div class="wrap">
-  <header class="page"><h1>{title}</h1><div class="sub">{producer · date · status · 主敘事}</div></header>
-  <nav class="seg" role="tablist">
-    <button role="tab" data-tab="brief">Brief</button> … <button data-tab="prd" aria-selected="true">PRD</button>
-  </nav>
-  <section class="panel" data-panel="brief">…</section>
-  <section class="panel active" data-panel="prd">…</section>
-</div><script>
-  /* click tab → toggle aria-selected on buttons + .active on matching [data-panel]; sync location.hash */
-</script></body></html>
-```
+Workflow each run:
+
+1. Copy `templates/prd-shell.html` to `out/{task-name}/{task-name}.html`.
+2. Fill `{{TITLE}}`, `{{SUBTITLE}}`, and the meta comment block.
+3. Keep only the segments you produced — to drop one, delete **both** its `<button>` and its matching `<section class="panel">`. Add segments to the same file across incremental runs.
+4. Set `aria-selected="true"` on exactly one tab and `class="panel active"` on its matching section — the most downstream view present.
+5. Fill each panel with `.card` blocks using the CARD VOCABULARY comment at the top of the shell. Mark the one conclusion card per view with `class="card primary"`.
+
+If `templates/prd-shell.html` is not reachable in the current environment, reconstruct it from the Format Rules + hierarchy spec above, then write the result so the next run has a local copy.
 
 ## Uncertainty Protocol
 

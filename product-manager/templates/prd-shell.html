@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{TITLE}} — PRD</title>
+<!--
+  PRD shell template (product-manager agent). Copy this file verbatim, then:
+  1. Fill {{TITLE}} / {{SUBTITLE}} / the meta block below.
+  2. Keep only the segments you produced. To drop a segment, delete BOTH its
+     <button> in <nav class="seg"> AND its matching <section class="panel">.
+  3. Set aria-selected="true" + class="panel active" on the most downstream
+     view present (PRD if it exists, else the latest move). Exactly one active.
+  4. Fill each panel with .card blocks. Do NOT edit <style> or <script>.
+
+  meta:
+    task: {{TASK_SLUG}}
+    producer: product-manager
+    date: {{YYYY-MM-DD}}
+    status: {{draft|review|approved}}
+    deliverables: {{brief|validation|stories|prd, comma-separated}}
+
+  CARD VOCABULARY (building blocks — reuse, don't reinvent):
+    <div class="card"> … </div>                  generic section
+    <div class="card primary"> … </div>          ONE conclusion card per view (problem/verdict/overview); accent left bar
+    <h2>區塊標題</h2>                              section heading — 17px/700, always first child
+    <h3>子標題</h3>                                subsection — 16px/600
+    <p class="lead">一句話結論</p>                  18px lead sentence; one per primary card max
+    <p>內文</p>                                    15px body
+    <p class="note">旁註</p>                       13px muted — asides ONLY, never main content
+    <ul><li>…</li></ul>                            one idea per li, ≤2 sentences
+    <table><tr><th>…</th></tr><tr><td>…</td></tr></table>   structured data (goals/deps/axes)
+    <span class="badge go">PROCEED</span>          green — pass/resolved/已解決
+    <span class="badge warn">待補</span>            amber — needed, not blocking
+    <span class="badge block">發布阻擋</span>        red — release blocker
+    <span class="badge soft">主力</span>            blue — neutral tag
+    <div class="verdict"><span class="badge go big">PROCEED</span><span>…</span></div>
+    <div class="grid"><div class="mini"><h4>名稱</h4><div class="tag">角色</div><p class="note">…</p></div></div>   persona cards
+    <div class="fr"><span class="k">FR-1 標題</span><ul>…</ul></div>   functional-requirement group
+    <details><summary>Epic …</summary><div class="ac">…</div></details>   collapsible stories
+    <pre class="data">…</pre>                       data structures / schema
+    <code class="id">S1.1</code> / <code class="id">__%</code>   inline id or placeholder value
+-->
+<style>
+  :root{
+    --bg:#f6f7f9; --card:#fff; --ink:#1a1d21; --muted:#5b6470; --line:#e5e8ec;
+    --accent:#2f6df0; --accent-soft:#eaf1fe;
+    --go:#0f9d58; --go-soft:#e7f6ee; --warn:#c77700; --warn-soft:#fdf3e3; --stop:#d23b3b;
+    --radius:12px;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font:15px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang TC","Noto Sans TC",sans-serif;}
+  .wrap{max-width:880px;margin:0 auto;padding:28px 20px 80px}
+  header.page{margin-bottom:18px}
+  header.page h1{font-size:22px;margin:0 0 4px}
+  header.page .sub{color:var(--muted);font-size:13px}
+  .seg{position:sticky;top:12px;z-index:10;display:flex;gap:4px;padding:4px;
+    background:var(--card);border:1px solid var(--line);border-radius:999px;
+    box-shadow:0 2px 10px rgba(0,0,0,.04);margin:14px 0 24px;overflow:auto}
+  .seg button{flex:1 0 auto;border:0;background:transparent;color:var(--muted);
+    padding:11px 16px;border-radius:999px;font-size:14px;font-weight:600;cursor:pointer;white-space:nowrap}
+  .seg button[aria-selected="true"]{background:var(--accent);color:#fff}
+  .panel{display:none;animation:fade .2s ease}
+  .panel.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+    padding:18px 22px;margin:0 0 20px}
+  .card.primary{border-left:4px solid var(--accent);padding-left:20px}
+  .card > h2:first-child{margin-top:0}
+  .card h2{font-size:17px;font-weight:700;color:var(--ink);margin:0 0 14px;letter-spacing:0}
+  .card h3{font-size:16px;font-weight:600;margin:20px 0 6px}
+  .card p{margin:0 0 8px}
+  .card ul{margin:0 0 4px;padding-left:18px}
+  .card li{margin:3px 0}
+  .lead{font-size:18px;line-height:1.65;font-weight:500;color:var(--ink)}
+  table{width:100%;border-collapse:collapse;font-size:14px;margin:4px 0}
+  th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{color:var(--muted);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.03em}
+  .badge{display:inline-block;padding:2px 9px;border-radius:999px;font-size:12px;font-weight:700}
+  .badge.go{background:var(--go-soft);color:var(--go)}
+  .badge.warn{background:var(--warn-soft);color:var(--warn)}
+  .badge.block{background:#fdeaea;color:var(--stop)}
+  .badge.soft{background:var(--accent-soft);color:var(--accent)}
+  .verdict{display:flex;align-items:center;gap:12px;font-size:18px;font-weight:700}
+  .verdict .big{font-size:24px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+  .mini{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:14px}
+  .mini h4{margin:0 0 4px;font-size:14px}
+  .mini .tag{font-size:12px;color:var(--muted)}
+  .data{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12.5px;
+    background:#0f1115;color:#d7dbe0;border-radius:10px;padding:14px 16px;overflow:auto;line-height:1.5}
+  .note{font-size:13px;color:var(--muted)}
+  .fr{margin:0 0 14px}
+  .fr .k{font-weight:700;color:var(--accent)}
+  details{border:1px solid var(--line);border-radius:10px;padding:0 14px;margin:8px 0;background:var(--bg)}
+  details summary{cursor:pointer;font-weight:600;padding:12px 0;list-style:none}
+  details summary::-webkit-details-marker{display:none}
+  details[open] summary{border-bottom:1px solid var(--line);margin-bottom:10px}
+  details .ac{padding-bottom:12px}
+  code.id{background:var(--accent-soft);color:var(--accent);padding:1px 6px;border-radius:5px;font-size:12.5px;font-weight:700}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="page">
+    <h1>{{TITLE}}</h1>
+    <div class="sub">{{SUBTITLE — producer · date · status · 主敘事族群}}</div>
+  </header>
+
+  <!-- Keep only the buttons whose segments you produced. -->
+  <nav class="seg" role="tablist">
+    <button role="tab" aria-selected="false" data-tab="brief">Brief 探索</button>
+    <button role="tab" aria-selected="false" data-tab="validation">Validation 驗證</button>
+    <button role="tab" aria-selected="false" data-tab="stories">Stories 故事</button>
+    <button role="tab" aria-selected="true" data-tab="prd">PRD 規格</button>
+  </nav>
+
+  <!-- ============ BRIEF ============ -->
+  <section class="panel" data-panel="brief">
+    <div class="card primary">
+      <h2>問題</h2>
+      <p class="lead">{{一句話問題陳述 — ≤2 句}}</p>
+    </div>
+    <!-- add: 目標用戶(table) · JTBD · 商業目標/範圍 · 關鍵假設 · Open Questions -->
+  </section>
+
+  <!-- ============ VALIDATION ============ -->
+  <section class="panel" data-panel="validation">
+    <div class="card primary">
+      <h2>裁決</h2>
+      <div class="verdict"><span class="badge go big">PROCEED</span><span>{{方向成立（附條件）}}</span></div>
+      <p class="note" style="margin-top:10px">{{一句話依據}}</p>
+    </div>
+    <!-- add: 四軸驗證(table) · PROCEED 附帶條件 · Falsification 觸發 -->
+  </section>
+
+  <!-- ============ STORIES ============ -->
+  <section class="panel" data-panel="stories">
+    <div class="card">
+      <h2>命名角色</h2>
+      <div class="grid">
+        <div class="mini"><h4>{{角色名 年齡}} <span class="badge soft">主力</span></h4><div class="tag">{{身分}}</div><p class="note">{{一句畫像}}</p></div>
+      </div>
+    </div>
+    <!-- add: Epics & Stories(details) · 邊緣路徑 -->
+  </section>
+
+  <!-- ============ PRD ============ -->
+  <section class="panel active" data-panel="prd">
+    <div class="card primary">
+      <h2>Overview</h2>
+      <p class="lead">{{一句話產品定位}}</p>
+      <p class="note">{{主轉換事件 / 範圍邊界}}</p>
+    </div>
+    <!-- add: Goals(table) · Non-Goals · User Journey · Functional Requirements(.fr) ·
+         Edge Cases · Success Metrics · Dependencies(table) · Trade-offs · Open Decisions · 附錄(.data) -->
+  </section>
+
+</div>
+
+<script>
+  const tabs = document.querySelectorAll('.seg button');
+  const panels = document.querySelectorAll('.panel');
+  function show(name){
+    tabs.forEach(t=>t.setAttribute('aria-selected', String(t.dataset.tab===name)));
+    panels.forEach(p=>p.classList.toggle('active', p.dataset.panel===name));
+    history.replaceState(null,'','#'+name);
+  }
+  tabs.forEach(t=>t.addEventListener('click',()=>show(t.dataset.tab)));
+  const init = location.hash.replace('#','');
+  if([...tabs].some(t=>t.dataset.tab===init)) show(init);
+</script>
+</body>
+</html>
