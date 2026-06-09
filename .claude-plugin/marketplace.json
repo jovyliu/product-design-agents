@@ -2,8 +2,8 @@
   "name": "product-design-agents",
   "owner": { "name": "Jovy Liu" },
   "metadata": {
-    "description": "Four standalone product-design agents — install only the ones you need.",
-    "version": "1.0.0"
+    "description": "Five standalone product-design agents — install only the ones you need.",
+    "version": "1.1.0"
   },
   "plugins": [
     {
@@ -25,6 +25,11 @@
       "name": "qa-engineer",
       "source": "./qa-engineer",
       "description": "Produces a test plan with manual cases, regression scope, and a bug-report template from a PRD"
+    },
+    {
+      "name": "ui-reference-researcher",
+      "source": "./ui-reference-researcher",
+      "description": "Maps each PRD section to its user story and finds matching real-world UI references on Mobbin, delivered as an annotated comparison doc with embedded screenshots"
     }
   ]
 }

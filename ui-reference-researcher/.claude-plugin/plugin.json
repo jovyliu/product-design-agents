@@ -1,0 +1,7 @@
+{
+  "name": "ui-reference-researcher",
+  "description": "Maps each PRD section to its user story and finds matching real-world UI references on Mobbin, delivered as an annotated comparison doc with embedded screenshots",
+  "version": "1.0.0",
+  "author": { "name": "Jovy Liu" },
+  "keywords": ["ui", "references", "mobbin", "patterns", "user-story", "benchmarking"]
+}
