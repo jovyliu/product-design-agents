@@ -29,7 +29,7 @@ Paste a design request. Fill what you know; blanks are the only thing it asks ab
 
 ## Output
 
-`out/{task-name}/session-brief.md`, `validation-{date}.md`, `stories-{slug}.md`, `prd-{slug}.md` — each with a YAML metadata header. Ask for just one and it reads existing upstream files instead of redoing them.
+One self-contained HTML: `out/{task-name}/{task-name}.html`. A sticky segmented control switches between Brief / Validation / Stories / PRD; only the moves you ran appear, PRD opens by default. No external dependencies — opens by double-click, renders offline. Ask for just one move and it adds that segment to the same file instead of redoing the rest.
 
 ## Behavior
 
